@@ -1,3 +1,5 @@
 pyyaml>=6.0
 rich>=13.7.0
 pyinstaller>=6.0
+pywinauto>=0.6.8
+uiautomation>=2.0.20
