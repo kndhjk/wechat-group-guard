@@ -1,5 +1,5 @@
 from watcher.mock_file import MockFileWatcher
-from detector.rules import detect_text
+from detector.scoring import score_text
 from review.queue import ReviewItem
 from review.console import ask_for_review
 from review.service import ReviewService
@@ -19,12 +19,13 @@ def main():
     for msg in watcher.poll():
         if not is_group_allowed(msg.group_name, allowed_groups):
             continue
-        result = detect_text(msg.text, KEYWORDS)
+        result = score_text(msg.text, KEYWORDS)
         append_jsonl('data/messages.jsonl', {
             'group_name': msg.group_name,
             'sender': msg.sender,
             'text': msg.text,
             'reasons': result.reasons,
+            'score': result.score,
             'suspicious': result.suspicious,
             'timestamp': msg.timestamp.isoformat(),
         })
