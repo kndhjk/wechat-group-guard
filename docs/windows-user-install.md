@@ -16,3 +16,12 @@ Double-click:
 
 ## Future packaging
 Later this project can be distributed as a built EXE package to avoid requiring Python on end-user machines.
+
+
+## Probe WeChat conversation list
+
+Double-click or run:
+
+```bat
+scripts\probe_wechat_groups.bat
+```

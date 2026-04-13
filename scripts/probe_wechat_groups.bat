@@ -1,4 +1,4 @@
 @echo off
 cd /d %~dp0\..
 call .venv\Scripts\activate.bat
-python -m gui.app
+python -m scripts.probe_wechat_groups

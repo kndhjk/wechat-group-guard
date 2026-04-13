@@ -2,4 +2,4 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 . .venv/bin/activate
-python gui/app.py
+python -m gui.app
