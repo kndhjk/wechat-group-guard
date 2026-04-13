@@ -7,6 +7,7 @@ from storage.jsonl_store import append_jsonl
 from storage.pending_store import PendingStore
 from storage.decision_store import DecisionStore
 from watcher.filtering import is_group_allowed
+from watcher.dedup import DedupCache
 from storage.ignore_store import IgnoreStore
 
 KEYWORDS = ['加V', '兼职', '刷单', '代写', '贷款', '返利', '推广']
@@ -19,11 +20,14 @@ def main():
     review_service = ReviewService(PendingStore())
     decision_store = DecisionStore()
     ignore_store = IgnoreStore()
+    dedup = DedupCache()
 
     for msg in watcher.poll():
         if not is_group_allowed(msg.group_name, allowed_groups):
             continue
         if ignore_store.contains(msg.sender):
+            continue
+        if dedup.seen(msg.group_name, msg.sender, msg.text):
             continue
         result = score_text(msg.text, KEYWORDS)
         append_jsonl('data/messages.jsonl', {
