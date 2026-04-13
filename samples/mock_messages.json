@@ -1,0 +1,5 @@
+[
+  {"group_name": "示例微信群", "sender": "某广告号", "text": "加V了解兼职，日结，vx abc123"},
+  {"group_name": "示例微信群", "sender": "正常成员", "text": "今晚吃啥"},
+  {"group_name": "另一个群", "sender": "路人", "text": "推广链接 https://spam.example.com"}
+]

@@ -1,4 +1,4 @@
-from watcher.mock import MockWatcher
+from watcher.mock_file import MockFileWatcher
 from detector.rules import detect_text
 from review.queue import ReviewItem
 from review.console import ask_for_review
@@ -12,10 +12,7 @@ KEYWORDS = ['加V', '兼职', '刷单', '代写', '贷款', '返利', '推广']
 
 def main():
     allowed_groups = ['示例微信群']
-    watcher = MockWatcher([
-        {'group_name': '示例微信群', 'sender': '某广告号', 'text': '加V看兼职，日结，联系vx abc123'},
-        {'group_name': '示例微信群', 'sender': '正常成员', 'text': '今晚吃什么'},
-    ])
+    watcher = MockFileWatcher('samples/mock_messages.json')
 
     review_service = ReviewService(PendingStore())
 
