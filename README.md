@@ -74,3 +74,8 @@ Uninstall virtualenv only:
 
 More detail:
 - `docs/deployment.md`
+
+## EXE packaging
+
+Planned Windows packaging is included via PyInstaller.
+See: `docs/windows-build.md`
