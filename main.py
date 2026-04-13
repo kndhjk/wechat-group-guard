@@ -3,6 +3,7 @@ from detector.scoring import score_text
 from review.queue import ReviewItem
 from review.console import ask_for_review
 from review.service import ReviewService
+from review.ids import make_review_id
 from storage.jsonl_store import append_jsonl
 from storage.pending_store import PendingStore
 from storage.decision_store import DecisionStore
@@ -30,7 +31,9 @@ def main():
         if dedup.seen(msg.group_name, msg.sender, msg.text):
             continue
         result = score_text(msg.text, KEYWORDS)
+        review_id = make_review_id(msg.group_name, msg.sender, msg.text)
         append_jsonl('data/messages.jsonl', {
+            'review_id': review_id,
             'group_name': msg.group_name,
             'sender': msg.sender,
             'text': msg.text,
@@ -50,6 +53,7 @@ def main():
         review_service.enqueue(item)
         approved = ask_for_review(item)
         decision = {
+            'review_id': review_id,
             'group_name': item.group_name,
             'sender': item.sender,
             'message': item.message,
