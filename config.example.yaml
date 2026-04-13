@@ -1,0 +1,21 @@
+groups:
+  - name: "示例微信群"
+    enabled: true
+
+review:
+  mode: local_console
+  auto_kick: false
+
+detection:
+  keywords:
+    - "加V"
+    - "兼职"
+    - "刷单"
+    - "代写"
+    - "贷款"
+    - "返利"
+    - "推广"
+  block_urls: true
+  block_phone_numbers: true
+  block_wechat_ids: true
+  repeat_message_threshold: 3
