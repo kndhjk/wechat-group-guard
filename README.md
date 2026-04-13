@@ -32,3 +32,18 @@ This project is review-first:
 ## Status
 
 Initial scaffold in progress.
+
+## Current implementation status
+
+Implemented now:
+- mock watcher
+- rule detector
+- console review flow
+- audit logging
+- desktop watcher stub
+- desktop kick executor stub
+
+Planned next:
+- real desktop WeChat integration on Windows
+- persistent review queue
+- whitelist of monitored groups
