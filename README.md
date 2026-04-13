@@ -47,3 +47,30 @@ Planned next:
 - real desktop WeChat integration on Windows
 - persistent review queue
 - whitelist of monitored groups
+
+## GUI
+
+A simple local desktop review GUI is included in this repo.
+
+## Install / run / uninstall
+
+Quick install:
+
+```bash
+./scripts/install.sh
+```
+
+Run GUI:
+
+```bash
+./scripts/run.sh
+```
+
+Uninstall virtualenv only:
+
+```bash
+./scripts/uninstall.sh
+```
+
+More detail:
+- `docs/deployment.md`
