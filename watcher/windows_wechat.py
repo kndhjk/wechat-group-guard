@@ -60,8 +60,9 @@ def _get_chat_list_control(win: auto.WindowControl) -> Optional[auto.Control]:
     # Try the most common pattern: a ListControl or ListItemControl
     for ctrl in win.GetChildren():
         name = getattr(ctrl, 'Name', '') or ''
-        control_type = getattr(ctrl, 'ControlType', '') or ''
-        if control_type and 'List' in control_type:
+        ct = getattr(ctrl, 'ControlType', None)
+        ct_name = str(ct) if ct is not None else ''
+        if ct_name and 'List' in ct_name:
             return ctrl
         # Fallback: look for the "聊天" pane
         if name == _CHAT_LIST_NAME:
