@@ -1,10 +1,33 @@
+# Python
 __pycache__/
-*.pyc
-.venv/
-venv/
+*.py[cod]
+*.so
+.Python
 .env
 .env.*
+venv/
+.venv/
+venv/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Project-specific (local data — never commit)
 logs/
 data/
-node_modules/
-.DS_Store
+*.jsonl
+config.yaml
+
+# WeChat automation binaries (Windows only)
+*.exe
+*.dll

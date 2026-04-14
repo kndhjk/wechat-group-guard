@@ -1,21 +1,54 @@
-groups:
-  - name: "示例微信群"
-    enabled: true
+# WeChat Group Guard — Configuration
+# Copy this file to config.yaml and edit.
 
-review:
-  mode: local_console
-  auto_kick: false
+# ── Detection ───────────────────────────────────────────────────────
+# Ad/spam keywords (case-insensitive)
+keywords:
+  - 加V
+  - 兼职
+  - 刷单
+  - 代写
+  - 贷款
+  - 返利
+  - 推广
+  - 引流
+  - 扫码
+  - 下单
+  - 带你赚
+  - 日结
+  - 薅羊毛
+  - 内部优惠券
+  - 客服微
 
-detection:
-  keywords:
-    - "加V"
-    - "兼职"
-    - "刷单"
-    - "代写"
-    - "贷款"
-    - "返利"
-    - "推广"
-  block_urls: true
-  block_phone_numbers: true
-  block_wechat_ids: true
-  repeat_message_threshold: 3
+# URLs containing these domains are scored higher (+45 vs +35 for generic URL)
+blocked_domains:
+  - t.cn
+  - bit.ly
+  - tinyurl.com
+  - goo.gl
+  - taobao.com
+  - 1688.com
+  - pinduoduo.com
+  - 拼多多
+  - youtu.be
+  - vm.tiktok.com
+
+# Senders in this list bypass detection entirely
+trusted_senders: []
+
+# ── Monitoring ───────────────────────────────────────────────────────
+# Groups to monitor. Empty list = monitor ALL groups.
+# On first run the GUI lets you pick groups from the WeChat conversation list.
+allowed_groups: []
+
+# ── Review ─────────────────────────────────────────────────────────
+# Seconds between poll cycles (desktop watcher only)
+poll_interval: 5
+
+# ⚠️ SAFETY: dry_run=true prevents any actual kicks.
+# Test with dry_run=true first. Set to false only when you're ready.
+dry_run: true
+
+# ── Console mode options ────────────────────────────────────────────
+# Set to true to poll once and exit (useful for testing)
+mock_once: false

@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/.."
+echo "[*] Removing virtual environment…"
 rm -rf .venv
-printf 'Virtual environment removed. Project files kept.\n'
-printf 'If you also want to remove runtime data, delete: data/ logs/\n'
+echo "[*] Virtual environment removed."
+echo ""
+echo "Note: data/, logs/, config.yaml, and .gitignore-controlled files remain."
+echo "To remove everything: rm -rf wechat-group-guard"

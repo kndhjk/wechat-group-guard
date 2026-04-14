@@ -1,5 +1,6 @@
 [
   {"name": "示例微信群", "enabled": true},
-  {"name": "同学群", "enabled": false},
-  {"name": "租房群", "enabled": true}
+  {"name": "COMPSCI 702 课程群", "enabled": false},
+  {"name": "Auckland华人二手群", "enabled": false},
+  {"name": "Ming的家人们", "enabled": true}
 ]
