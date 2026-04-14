@@ -45,6 +45,7 @@ from storage.pending_store import PendingStore
 from storage.decision_store import DecisionStore
 from storage.ignore_store import IgnoreStore
 from storage.group_store import GroupStore
+from storage.log_rotation import RotatingJSONLWriter, rotate_logs
 from watcher.filtering import is_group_allowed
 from watcher.dedup import DedupCache
 from executor import DesktopWeChatKickExecutor
@@ -122,7 +123,8 @@ def make_watcher(cfg: dict, group_store: GroupStore):
 
 # ── Core processing ────────────────────────────────────────────────
 def process_message(msg, scoring, pending_store, decision_store,
-                    ignore_store, dedup, executor, allowed_groups, cfg):
+                    ignore_store, dedup, executor, allowed_groups, cfg,
+                    audit_writer=None):
     """Score, review, and act on a single message. Returns action taken."""
     # Group filter
     if not is_group_allowed(msg.group_name, allowed_groups):
@@ -204,7 +206,10 @@ def process_message(msg, scoring, pending_store, decision_store,
     decision = item.to_dict()
     decision['action'] = action.value
     decision['reviewed_at'] = reviewed_at
-    append_jsonl('logs/review_actions.jsonl', decision)
+    if audit_writer is not None:
+        audit_writer.append(decision)
+    else:
+        append_jsonl('logs/review_actions.jsonl', decision)
     decision_store.append(decision)
 
     return action
@@ -226,6 +231,17 @@ def run_console(cfg: dict):
     executor = DesktopWeChatKickExecutor(dry_run=cfg.get('dry_run', True))
     allowed_groups = cfg.get('allowed_groups', [])
 
+    # Use rotating log writer for the audit trail
+    audit_writer = RotatingJSONLWriter(
+        'logs/review_actions.jsonl',
+        max_bytes=cfg.get('log_max_bytes', 5 * 1024 * 1024),
+        backup_count=cfg.get('log_backup_count', 5),
+    )
+    # Rotate any oversized existing log on startup
+    rotate_logs('logs/review_actions.jsonl',
+                max_bytes=cfg.get('log_max_bytes', 5 * 1024 * 1024),
+                backup_count=cfg.get('log_backup_count', 5))
+
     watcher = make_watcher(cfg, group_store)
     poll_interval = cfg.get('poll_interval', 5.0)
     once = cfg.get('mock_once', False)
@@ -240,6 +256,7 @@ def run_console(cfg: dict):
                 process_message(
                     msg, scoring, pending_store, decision_store,
                     ignore_store, dedup, executor, allowed_groups, cfg,
+                    audit_writer=audit_writer,
                 )
         except Exception as e:
             logger.exception('Error during poll: %s', e)

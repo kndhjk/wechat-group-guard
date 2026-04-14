@@ -45,6 +45,30 @@ scripts\build_exe.bat
 
 Requires: Python 3.10+ on Windows, `pyinstaller` installed.
 
+## Run tests
+
+```bash
+# Install test dependencies (already in requirements.txt)
+pip install pytest
+
+# Run all tests
+python -m pytest tests/ -v
+
+# Run with coverage
+python -m pytest tests/ -v --tb=short
+```
+
+## Log rotation
+
+`logs/review_actions.jsonl` is auto-rotated when it exceeds 5 MB:
+- Rotated files are gzip-compressed: `review_actions.jsonl.1.gz`, `.2.gz` …
+- Up to 5 backups are kept (configurable via `config.yaml`).
+- To manually trigger rotation:
+  ```python
+  from storage.log_rotation import rotate_logs
+  rotate_logs('logs/review_actions.jsonl')
+  ```
+
 ## Config
 
 Copy `config.example.yaml` → `config.yaml` and edit:

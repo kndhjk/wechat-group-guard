@@ -5,7 +5,11 @@ from dataclasses import dataclass, field
 from typing import List, Set
 
 
-URL_RE = re.compile(r'https?://|www\.')
+# Matches http://, https://, www., and bare short domains (t.cn, bit.ly, vm.tiktok.com …)
+URL_RE = re.compile(
+    r'https?://|www\.|[\w-]+\.(?:cn|com|org|net|io|ai|cc|co|me|info|pro|top|xyz|tv|cc|go)\b',
+    re.IGNORECASE
+)
 PHONE_RE = re.compile(r'(?:\+?64|0)\d{8,11}')
 WECHAT_ID_RE = re.compile(r'微信|vx|v信|wechat', re.IGNORECASE)
 # Match anything that looks like a WeChat ID (alphanumeric, 6-30 chars, after @ or standalone)
@@ -49,14 +53,17 @@ class RulesEngine:
             if kw.lower() in low:
                 reasons.append(f'keyword:{kw}')
 
-        # URL + domain check
-        if URL_RE.search(text):
-            reasons.append('url')
-            # Check for blocked domains in URL
-            for domain in self.blocked_domains:
-                if domain in low:
-                    reasons.append(f'blocked_domain:{domain}')
+        # URL detection (broader: handles bare short domains like t.cn, bit.ly)
+        found_url = False
+        for m in URL_RE.finditer(text):
+            found_url = True
+            matched_domain = m.group(0).lower().rstrip('/').lstrip('https://').lstrip('http://').lstrip('www.')
+            for blocked in self.blocked_domains:
+                if blocked in matched_domain or blocked in m.group(0).lower():
+                    reasons.append(f'blocked_domain:{blocked}')
                     break
+        if found_url and 'blocked_domain:' not in ' '.join(reasons):
+            reasons.append('url')
 
         # Phone number
         if PHONE_RE.search(text):
@@ -85,9 +92,10 @@ class RulesEngine:
 
 
 # Module-level convenience
-_default_engine = RulesEngine()
+_default_engine = RulesEngine(keywords=[])
 
 def detect_text(text: str, keywords: list[str]) -> DetectionResult:
+    _default_engine.keywords = list(keywords)
     return _default_engine.detect(text)
 
 def set_keywords(keywords: list[str]) -> None:

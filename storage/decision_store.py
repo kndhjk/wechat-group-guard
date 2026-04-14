@@ -14,3 +14,6 @@ class DecisionStore:
         data = json.loads(self.path.read_text(encoding='utf-8'))
         data.append(item)
         self.path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding='utf-8')
+
+    def load(self) -> list[dict[str, Any]]:
+        return json.loads(self.path.read_text(encoding='utf-8'))
