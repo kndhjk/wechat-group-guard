@@ -40,7 +40,7 @@ except ImportError:
 # Well-known WeChat window and control names (localised)
 _CHAT_LIST_NAME = '聊天'
 _MEMBER_LIST_NAME = '成员'
-_WECHAT_WINDOW = '微信'
+_WECHAT_WINDOW = 'Weixin'
 
 
 def _get_wechat_window() -> auto.WindowControl:
